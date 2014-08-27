@@ -1,2 +1,315 @@
-<h1>Welcome#index</h1>
-<p>Find me in app/views/welcome/index.html.erb</p>
+<h1 class="entry-title">Authentication Using Devise In Rails&nbsp;4</h1>
+	<div class="entry-content clear">
+		<p><strong>Devise </strong>provides a flexible authentication solution for any Rails app. Devise is a Rails Engine and covers controllers and views as well.It composed of 10 modules such as:</p>
+<ul>
+<li>Database Authenticatable</li>
+<li>Omniauthable</li>
+<li>Confirmable</li>
+<li>Recoverable</li>
+<li>Registerable</li>
+<li>Rememberable</li>
+<li>Trackable</li>
+<li>Timeoutable</li>
+<li>Validatable</li>
+<li>Lockabl</li>
+</ul>
+<p>In this blog i&#8217;ll show you the basic integration of Devise in a Rails app.Below are the steps to follow:</p>
+<p><strong>Step:1</strong><br />
+Add the gem in your gem file<br />
+<em>gem ‘devise’</em><br />
+Run the &#8220;bundle install&#8221; command to install the gem.</p>
+<p><strong>Step:2</strong><br />
+Define your root url like below<br />
+<em>root :to =&gt; welcome#index”</em></p>
+<p><strong>Step:3</strong><br />
+Now you need to run the generator command<br />
+<em>rails generate devise:install</em><br />
+This generator will install all Devise configurations.Take a look at them.</p>
+<p><strong>Step:4</strong><br />
+After done with the above options,you are ready to add Devise to any of your models using the generator:<br />
+<em>rails generate devise User</em><br />
+This generator creates a few interesting things: a model file, a migration and a devise_for route.</p>
+<p><strong>Step:5</strong><br />
+Run the migrate command to insert the User table in your database.<br />
+<em>rake db:migrate</em><br />
+It&#8217;ll insert the Users table with some columns.</p>
+<p><strong>Step:6</strong><br />
+Add the following block in your application’s layout file(application.html.erb)<br />
+<em> &lt;% if user_signed_in? %&gt;<br />
+Signed in as &lt;%= current_user.email %&gt;. Not you?<br />
+&lt;%= link_to &#8220;Sign out&#8221;, destroy_user_session_path,:method =&gt; :delete %&gt;<br />
+&lt;% else %&gt;<br />
+&lt;%= link_to &#8220;Sign up&#8221;, new_user_registration_path %&gt; or<br />
+&lt;%= link_to &#8220;Sign in&#8221;, new_user_session_path %&gt;<br />
+&lt;% end %&gt;<br />
+</em><br />
+Now when you reload the page ,you can see a sign in/sign up links.In signup page initially there are only Email,Password and Confirm Password feilds present.You can add your custom fields by overriding the devise view files by running the following command in your terminal:<br />
+<em>rails generate devise:views users</em></p>
+<p>Now your application is configured with Devise authentication.</p>
+
+<h1 class="entry-title">Facebook Connect Integration Using Devise and OmniAuth In Rails&nbsp;App.</h1>
+	<div class="entry-content clear">
+		<p><a href="http://deepakrip007.files.wordpress.com/2013/10/tumblr_lc8d68soov1qbbpq3.png"><img class="size-medium wp-image-116 alignright" alt="tumblr_lc8d68sOOv1qbbpq3" src="http://deepakrip007.files.wordpress.com/2013/10/tumblr_lc8d68soov1qbbpq3.png?w=300&#038;h=145" width="300" height="145" /></a>Now a days social media has become an important part of our life. Most of us are well acquainted with some popular social networks like Facebook,twitter and linkedin. In order to make your web app more competitve and user friendly you need to integrate them in your app.</p>
+<p>If your web app has a long registration page then by adding social network connect buttons user can easily login to your account by skipping those lengthy process.</p>
+<p>Here is an example to demonstarte how to integrate Facebook connect with devise authenication in a rails app.</p>
+<p><strong>Step:1</strong><br />
+Add the gems in your gem file</p>
+<pre><strong><em><code style="font-size:18px;"><em>gem ‘devise’</em>
+<em>gem 'omniauth'</em>
+<em>gem 'omniauth-facebook' </em></code></em></strong></pre>
+<p>Run the &#8220;bundle install&#8221; command to install the gem.</p>
+<p><strong>Step:2</strong><br />
+Define your root url like below</p>
+<pre><strong><em><code style="font-size:18px;">root :to =&gt; “home#index”</code></em></strong></pre>
+<p><strong>Step:3</strong><br />
+Now you need to run the generator command</p>
+<pre><strong><em><code style="font-size:18px;"><em>rails generate devise:install</em></code></em></strong></pre>
+<p>This generator will install all Devise configurations.Take a look at them.</p>
+<p><strong>Step:4</strong><br />
+After done with the above options,you are ready to add Devise to any of your models using the generator:</p>
+<pre><strong><em><code style="font-size:18px;"><em>rails generate devise User</em></code></em></strong></pre>
+<p>This generator creates a few interesting things: a model file, a migration and a devise_for route.</p>
+<p><strong>Step:5</strong><br />
+Go the user model &#8220;user.rb&#8221; and add the following line</p>
+<pre><strong><em><code style="font-size:18px;"><em>devise : omniauthable</em></code></em></strong></pre>
+<p><strong>Step:6</strong><br />
+Run the migrate command to insert the User table in your database.</p>
+<pre><strong><em><code style="font-size:18px;"><em>rake db:migrate</em></code></em></strong></pre>
+<p>It&#8217;ll insert the Users table with some columns.</p>
+<p><strong>Step:6</strong><br />
+You need two more columns to store provider type and userid given from facebook</p>
+<pre><strong><em><code style="font-size:18px;"><em>rails g migration AddProviderToUsers provider:string uid:string</em></code></em></strong></pre>
+<p>Runt <strong>rake db:migrate</strong> to insert the columns in users table.</p>
+<p><strong>Step:7</strong><br />
+First of all you need to create an app in facebook to get <strong>&#8220;App-ID&#8221;</strong> and <strong>&#8220;App Secret&#8221;</strong></p>
+<pre><strong><em><code style="font-size:18px;"><em>https://developers.facebook.com/</em></code></em></strong></pre>
+<p>Create an app and get the App id and secret key.</p>
+<p><strong>Step:8</strong><br />
+Now you need to declare the provider name and app id and key.Go to the file <strong>config/initializers/devise.rb</strong><em> and the following line</em></p>
+<pre><strong><em><code style="font-size:18px;"><em>require "omniauth-facebook"
+config.omniauth :facebook, "APP_ID", "APP_SECRET"</em></code></em></strong></pre>
+<p><strong>Step:9</strong><br />
+Go to your layout file and the following block</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+&lt;% if user_signed_in? %&gt;
+Signed in as &lt;%= current_user.name %&gt;. Not you?
+&lt;%= link_to "Sign out", destroy_user_session_path,:method =&gt; :delete %&gt;
+&lt;% else %&gt;
+&lt;%= link_to "Sign up", new_user_registration_path %&gt; or
+&lt;%= link_to "Sign in", new_user_session_path %&gt;
+&lt;%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %&gt;
+&lt;% end %&gt;
+</em></code></em></strong></pre>
+<p>When the user clicks on <em>Sign in with Facebook</em> link, they will redirects to the Facebook login page, after entering their credentials it will again redirect the user back to the applications Callback method .</p>
+<p><strong>Step:10</strong><br />
+Before creating the call back method change your route like below</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+devise_for :users, :controllers =&gt; { : omniauth_callbacks =&gt; "omniauth_callbacks" }
+</em></code></em></strong></pre>
+<p><strong>Step:11</strong><br />
+Create a new controller named as <strong>&#8220;omniauth_callbacks_controller.rb&#8221;</strong><em>.Add the following method in it.</em></p>
+<pre><strong><em><code style="font-size:18px;"><em>
+class OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController   
+def facebook     
+     @user = User.find_for_facebook_oauth(request.env["omniauth.auth"], current_user)      
+     if @user.persisted?       
+      sign_in_and_redirect @user, :event =&gt; :authentication #this will throw if @user is not activated
+      set_flash_message(:notice, :success, :kind =&gt; "Facebook") if is_navigational_format?
+    else
+      session["devise.facebook_data"] = request.env["omniauth.auth"]
+      redirect_to new_user_registration_url
+    end
+  end
+end
+</em></code></em></strong></pre>
+<p><strong>Step:12</strong><br />
+Add the following block in your user model.</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
+    user = User.where(:provider =&gt; auth.provider, :uid =&gt; auth.uid).first
+    if user
+      return user
+    else
+      registered_user = User.where(:email =&gt; auth.info.email).first
+      if registered_user
+        return registered_user
+      else
+        user = User.create(name:auth.extra.raw_info.name,
+                            provider:auth.provider,
+                            uid:auth.uid,
+                            email:auth.info.email,
+                            password:Devise.friendly_token[0,20],
+                          )
+      end    end
+  end
+</em></code></em></strong></pre>
+
+<h1 class="entry-title">Twitter and Linkedin Integration Using Devise and Omniauth In Rails&nbsp;App.</h1>
+	<div class="entry-content clear">
+		<p><a href="http://deepakrip007.files.wordpress.com/2013/11/linkedin_follow.png">   </a><a href="http://deepakrip007.files.wordpress.com/2013/11/ruby-on-rails-logoww.png"><img class="alignnone size-thumbnail wp-image-135" alt="ruby-on-rails-logoww" src="http://deepakrip007.files.wordpress.com/2013/11/ruby-on-rails-logoww.png?w=116&#038;h=150"   /></a>                      <a href="http://deepakrip007.files.wordpress.com/2013/11/add.png"><img class="alignnone size-full wp-image-137" style="margin-top:50px;margin-bottom:50px;" alt="Add" src="http://deepakrip007.files.wordpress.com/2013/11/add.png?w=800"   /></a>               <a href="http://deepakrip007.files.wordpress.com/2013/11/facebook-logo-png-transparent-i11.png"><img class="alignnone size-thumbnail wp-image-132" alt="facebook-logo-png-transparent-i11" src="http://deepakrip007.files.wordpress.com/2013/11/facebook-logo-png-transparent-i11.png?w=150&#038;h=147" width="150" height="147" />                 </a><a href="http://deepakrip007.files.wordpress.com/2013/11/add.png"><img class="alignnone size-full wp-image-137" style="margin-top:50px;margin-bottom:50px;" alt="Add" src="http://deepakrip007.files.wordpress.com/2013/11/add.png?w=800"   /></a>                  <a href="http://deepakrip007.files.wordpress.com/2013/11/linkedin_follow1.png"><img class="alignnone size-thumbnail wp-image-133" alt="linkedin_follow" src="http://deepakrip007.files.wordpress.com/2013/11/linkedin_follow1.png?w=150&#038;h=150"   /></a><br />
+In my <strong><a href="http://deepakrip007.wordpress.com/2013/10/28/facebook-connect-integration-using-devise-and-omniauth-in-rails-app/" target="_blank">previous blog</a></strong> i have explained how to integrate Facebook with devise in a rails app.In this blog i&#8217;ll show how to integrate twitter and linkedin in rails app with devise authentication.</p>
+<p>To install devise you can refer to my blog <a href="http://deepakrip007.wordpress.com/2013/09/22/authentication-using-devise-in-rails-3/"><em><strong>here</strong></em></a>.</p>
+<p><strong><span style="text-decoration:underline;">Twitter Integration</span></strong></p>
+<p><strong>Step:1</strong><br />
+Add the gems in your gem file</p>
+<pre><strong><em><code style="font-size:18px;"><em>gem ‘devise’</em>
+<em>gem 'omniauth'</em>
+<em>gem 'omniauth-twitter' </em></code></em></strong></pre>
+<p>Run the &#8220;bundle install&#8221; command to install the gem.</p>
+<p><strong>Step:2</strong><br />
+You need two more columns to store provider type and userid given from twitter</p>
+<pre><strong><em><code style="font-size:18px;"><em>rails g migration AddProviderToUsers provider:string uid:string</em></code></em></strong></pre>
+<p>Runt <strong>rake db:migrate</strong> to insert the columns in users table.</p>
+<p><strong>Step:3</strong><br />
+Go the user model &#8220;user.rb&#8221; and add the following line</p>
+<pre><strong><em><code style="font-size:18px;"><em>devise : omniauthable</em></code></em></strong></pre>
+<p><strong>Step:4</strong><br />
+First of all you need to create an app in twitter to get <strong>&#8220;Consumer key&#8221;</strong> and <strong>&#8220;Consumer Secret key&#8221;</strong></p>
+<pre><strong><em><code style="font-size:18px;"><em>https://dev.twitter.com/apps</em></code></em></strong></pre>
+<p>Create an app and get the App id and secret key.</p>
+<p><strong>Step:5</strong><br />
+Now you need to declare the provider name and app id and key.Go to the file <strong>config/initializers/devise.rb</strong><em> and the following line</em></p>
+<pre><strong><em><code style="font-size:18px;"><em>require 'omniauth-twitter'
+config.omniauth :twitter, "APP_ID", "APP_SECRET"</em></code></em></strong></pre>
+<p><strong>Step:6</strong><br />
+Go to your layout file and the following block</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+&lt;% if user_signed_in? %&gt;
+Signed in as &lt;%= current_user.name %&gt;. Not you?
+&lt;%= link_to "Sign out", destroy_user_session_path,:method =&gt; :delete %&gt;
+&lt;% else %&gt;
+&lt;%= link_to "Sign up", new_user_registration_path %&gt; or
+&lt;%= link_to "Sign in", new_user_session_path %&gt;
+&lt;%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %&gt;
+&lt;% end %&gt;
+</em></code></em></strong></pre>
+<p>When the user clicks on <em>Sign in with Twitter</em> link, they will redirects to the Twitter login page, after entering their credentials it will again redirect the user back to the applications Callback method .</p>
+<p><strong>Step:7</strong><br />
+Before creating the call back method change your route like below</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+devise_for :users, :controllers =&gt; { : omniauth_callbacks =&gt; "omniauth_callbacks" }
+</em></code></em></strong></pre>
+<p><strong>Step:8</strong><br />
+Create a new controller named as <strong>&#8220;omniauth_callbacks_controller.rb&#8221;</strong><em>.Add the following method in it.</em></p>
+<pre><strong><em><code style="font-size:18px;"><em>
+class OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController   
+def twitter
+    auth = env["omniauth.auth"]
+
+    @user = User.find_for_twitter_oauth(request.env["omniauth.auth"],current_user)
+    if @user.persisted?
+      flash[:notice] = I18n.t "devise.omniauth_callbacks.success"
+      sign_in_and_redirect @user, :event =&gt; :authentication
+    else
+      session["devise.twitter_uid"] = request.env["omniauth.auth"]
+      redirect_to new_user_registration_url
+    end
+  end
+</em></code></em></strong></pre>
+<p><strong>Step:9</strong><br />
+Add the following block in your user model.</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
+    user = User.where(:provider =&gt; auth.provider, :uid =&gt; auth.uid).first
+    if user
+      return user
+    else
+      registered_user = User.where(:email =&gt; auth.uid + "@twitter.com").first
+      if registered_user
+        return registered_user
+      else
+
+        user = User.create(name:auth.extra.raw_info.name,
+                            provider:auth.provider,
+                            uid:auth.uid,
+                            email:auth.uid+"@twitter.com",
+                            password:Devise.friendly_token[0,20],
+                          )
+      end
+
+    end
+  end
+</em></code></em></strong></pre>
+<p>Now we are done with twitter integration with devise.</p>
+<p><strong><span style="text-decoration:underline;">Linkedin Integration</span></strong></p>
+<p><strong>Step:1</strong><br />
+Add the gems in your gem file</p>
+<pre><strong><em><code style="font-size:18px;"><em>gem ‘devise’</em>
+<em>gem 'omniauth'</em>
+<em>gem 'omniauth-linkedin' </em></code></em></strong></pre>
+<p>Run the &#8220;bundle install&#8221; command to install the gem.</p>
+<p><strong>Step:2</strong><br />
+You need two more columns to store provider type and userid given from linkedin</p>
+<pre><strong><em><code style="font-size:18px;"><em>rails g migration AddProviderToUsers provider:string uid:string</em></code></em></strong></pre>
+<p>Runt <strong>rake db:migrate</strong> to insert the columns in users table.</p>
+<p><strong>Step:3</strong><br />
+Go the user model &#8220;user.rb&#8221; and add the following line</p>
+<pre><strong><em><code style="font-size:18px;"><em>devise : omniauthable</em></code></em></strong></pre>
+<p><strong>Step:4</strong><br />
+First of all you need to create an app in linkedin to get <strong>&#8220;App Id&#8221;</strong> and <strong>&#8220;App Secret key&#8221;</strong></p>
+<pre><strong><em><code style="font-size:18px;"><em>http://developer.linkedin.com</em></code></em></strong></pre>
+<p>Create an app and get the App id and secret key.</p>
+<p><strong>Step:5</strong><br />
+Now you need to declare the provider name and app id and key.Go to the file <strong>config/initializers/devise.rb</strong><em> and the following line</em></p>
+<pre><strong><em><code style="font-size:18px;"><em>require 'omniauth-linkedin'
+config.omniauth :linkedin, "APP_ID", "APP_SECRET"</em></code></em></strong></pre>
+<p><strong>Step:6</strong><br />
+Go to your layout file and the following block</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+&lt;% if user_signed_in? %&gt;
+Signed in as &lt;%= current_user.name %&gt;. Not you?
+&lt;%= link_to "Sign out", destroy_user_session_path,:method =&gt; :delete %&gt;
+&lt;% else %&gt;
+&lt;%= link_to "Sign up", new_user_registration_path %&gt; or
+&lt;%= link_to "Sign in", new_user_session_path %&gt;
+&lt;%= link_to "Sign in with Linkedin",user_omniauth_authorize_path(:linkedin) %&gt;
+&lt;% end %&gt;
+</em></code></em></strong></pre>
+<p>When the user clicks on <em>Sign in with Linkedin</em> link, they will redirects to the Linked login page, after entering their credentials it will again redirect the user back to the applications Callback method .</p>
+<p><strong>Step:7</strong><br />
+Before creating the call back method change your route like below</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+devise_for :users, :controllers =&gt; { : omniauth_callbacks =&gt; "omniauth_callbacks" }
+</em></code></em></strong></pre>
+<p><strong>Step:8</strong><br />
+Create a new controller named as <strong>&#8220;omniauth_callbacks_controller.rb&#8221;</strong><em>.Add the following method in it.</em></p>
+<pre><strong><em><code style="font-size:18px;"><em>
+class OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController   
+def linkedin
+    auth = env["omniauth.auth"]
+    @user = User.connect_to_linkedin(request.env["omniauth.auth"],current_user)
+    if @user.persisted?
+      flash[:notice] = I18n.t "devise.omniauth_callbacks.success"
+      sign_in_and_redirect @user, :event =&gt; :authentication
+    else
+      session["devise.linkedin_uid"] = request.env["omniauth.auth"]
+      redirect_to new_user_registration_url
+    end
+  end
+</em></code></em></strong></pre>
+<p><strong>Step:9</strong><br />
+Add the following block in your user model.</p>
+<pre><strong><em><code style="font-size:18px;"><em>
+def self.connect_to_linkedin(auth, signed_in_resource=nil)
+    user = User.where(:provider =&gt; auth.provider, :uid =&gt; auth.uid).first
+    if user
+      return user
+    else
+      registered_user = User.where(:email =&gt; auth.info.email).first
+      if registered_user
+        return registered_user
+      else
+
+        user = User.create(name:auth.info.first_name,
+                            provider:auth.provider,
+                            uid:auth.uid,
+                            email:auth.info.email,
+                            password:Devise.friendly_token[0,20],
+                          )
+      end
+
+    end
+  end   
+</em></code></em></strong></pre>
+<p>Now we are done with linkedin integration with devise.<br />
+Hope you will enjoy my blog</p>

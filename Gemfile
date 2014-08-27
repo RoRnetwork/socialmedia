@@ -40,3 +40,10 @@ gem 'spring',        group: :development
 
 gem 'quiet_assets'
 gem 'simple_form'
+gem 'devise'
+gem 'bootstrap-sass'
+gem 'omniauth'
+gem 'omniauth-twitter' 
+gem 'omniauth-linkedin' 
+gem 'omniauth-facebook' 
+gem 'annotate'
